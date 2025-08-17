@@ -2,5 +2,5 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "bujo"
-
+require "debug"
 require "minitest/autorun"
