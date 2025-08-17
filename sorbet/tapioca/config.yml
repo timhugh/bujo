@@ -1,0 +1,6 @@
+gem:
+  exclude:
+    - standard
+    - sorbet
+    - tapioca
+dsl:

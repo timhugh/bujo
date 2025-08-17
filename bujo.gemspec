@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "dry-cli", "~> 1.3.0"
   spec.add_dependency "tomlrb", "~> 2.0"
+  spec.add_dependency "sorbet-runtime", "~> 0.5"
 end
