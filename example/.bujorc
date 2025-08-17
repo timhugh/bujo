@@ -1,3 +1,0 @@
-base_directory = "~/.bujo"
-search_adapter = "fzf"
-exec_command = "echo %s"

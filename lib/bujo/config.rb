@@ -64,7 +64,8 @@ module Bujo
     end
 
     private_class_method def self.load_toml_file(filepath)
-      Tomlrb.load_file(File.expand_path(filepath))
+      file = File.read(File.expand_path(filepath))
+      Tomlrb.parse(file)
     rescue Errno::ENOENT
       FileUtils.touch(File.expand_path(filepath))
       {}
