@@ -8,11 +8,11 @@ module Bujo
       if config.exec_command
         ExecuteHandler.new(config.exec_command)
       else
-        PrintHandler.new
+        EchoHandler.new
       end
     end
 
-    class PrintHandler
+    class EchoHandler
       def call(file_path)
         puts file_path
       end
