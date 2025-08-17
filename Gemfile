@@ -13,6 +13,7 @@ end
 group :test do
   gem "fakefs", "~> 3.0", require: "fakefs/safe"
   gem "minitest", "~> 5.16"
+  gem "mocktail", "~> 2.0", require: "mocktail/sorbet"
 end
 
 group :development, :test do
