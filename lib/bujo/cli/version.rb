@@ -1,5 +1,7 @@
 # frozen_string_literal: true
+# typed: true
 
+require "sorbet-runtime"
 require "dry/cli"
 require_relative "../version"
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: true
 
 require "dry/cli"
 require_relative "cli/version"

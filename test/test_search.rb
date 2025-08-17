@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+# typed: true
 
 require "test_helper"
-require "bujo/search"
 
 class MockSearchAdapter
   attr_accessor :stubbed_filename

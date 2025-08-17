@@ -1,8 +1,7 @@
 # frozen_string_literal: true
+# typed: true
 
 require "test_helper"
-require "fakefs/safe"
-require "bujo/config"
 
 module Bujo
   class TestConfig < Test

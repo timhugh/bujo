@@ -5,6 +5,7 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "debug"
 require "fakefs/safe"
 require "minitest/autorun"
+require "bujo"
 
 class Test < Minitest::Test
   def setup

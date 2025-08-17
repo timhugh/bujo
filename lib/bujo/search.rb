@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: true
 
 require "open3"
 require_relative "config"
