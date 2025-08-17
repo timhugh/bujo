@@ -5,8 +5,12 @@ require_relative "config"
 
 module Bujo
   class Search
+    class ExecError < StandardError; end
+
     module Adapters
-      class ExecError < StandardError; end
+      def self.resolve(config)
+        Adapters::Fzf
+      end
 
       module Fzf
         def self.search(base_directory)
@@ -22,13 +26,7 @@ module Bujo
     end
 
     def run
-      search_adapter.search(@config.base_directory)
-    end
-
-    private
-
-    def search_adapter
-      Adapters::Fzf
+      Search::Adapters.resolve(@config).search(@config.base_directory)
     end
   end
 end
