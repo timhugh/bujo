@@ -8,7 +8,7 @@ module Bujo
       desc "Interactively find a file using fzf"
 
       def call(*)
-        Bujo::Search.new.run
+        puts Bujo::Search.new.run
       end
     end
   end

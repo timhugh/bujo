@@ -2,7 +2,6 @@
 
 require "open3"
 require_relative "config"
-require_relative "file_handlers"
 
 module Bujo
   class Search
@@ -23,8 +22,7 @@ module Bujo
     end
 
     def run
-      selected_file = search_adapter.search(@config.base_directory)
-      FileHandlers.resolve.call(selected_file)
+      search_adapter.search(@config.base_directory)
     end
 
     private

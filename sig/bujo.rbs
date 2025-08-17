@@ -1,3 +1,0 @@
-module Bujo
-  VERSION: String
-end

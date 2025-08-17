@@ -1,6 +1,0 @@
-module Bujo
-  class Error < StandardError
-  end
-
-  def self.run: () -> untyped
-end

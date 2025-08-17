@@ -18,20 +18,10 @@ class ReturnHandler
   end
 end
 
-def stub_executor
-  Bujo::FileHandlers.define_singleton_method(:resolve) do
-    ReturnHandler.new
-  end
-end
-
 module Bujo
   class TestSearch < Minitest::Test
-    def setup
-      stub_executor
-    end
-
     def test_searches_with_config
-      config = Config.new(base_directory: "~/test_directory")
+      config = Config.create(base_directory: "~/test_directory")
       Config.stub(:load, config) do
         stub_fzf_result(stdout: "test_file_path", expected_base_directory: config.base_directory) do
           assert_equal "test_file_path", Search.new.run

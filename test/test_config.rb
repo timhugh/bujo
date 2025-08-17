@@ -11,8 +11,7 @@ module Bujo
       @default_values = {
         config_file: nil,
         base_directory: "~/.bujo",
-        search_adapter: "fzf",
-        exec_command: nil
+        search_adapter: "fzf"
       }.freeze
     end
 
@@ -24,7 +23,7 @@ module Bujo
           assert_nil actual_config.send(path_param), "#{path_param} is not nil"
         end
       end
-      %i[search_adapter exec_command].each do |param|
+      %i[search_adapter].each do |param|
         if expected_values[param]
           assert_equal expected_values[param], actual_config.send(param), "#{param} does not match"
         else
@@ -41,8 +40,7 @@ module Bujo
       new_values = {
         config_file: "~/.test_config",
         base_directory: "~/test_directory",
-        search_adapter: "ripgrep",
-        exec_command: "echo"
+        search_adapter: "ripgrep"
       }.freeze
       assert_config_values new_values, Config.create(new_values)
     end
@@ -55,8 +53,7 @@ module Bujo
       expected_values = {
         config_file: "~/.bujorc",
         base_directory: "~/.test_bujo",
-        search_adapter: "ripgrep",
-        exec_command: "vim %s"
+        search_adapter: "ripgrep"
       }
       assert_config_values expected_values, Config.load
     end
@@ -65,8 +62,7 @@ module Bujo
       expected_values = {
         config_file: "~/.bujorc",
         base_directory: "~/.test_bujo",
-        search_adapter: "ripgrep",
-        exec_command: "vim %s"
+        search_adapter: "ripgrep"
       }
       assert_config_values expected_values, Config.load("~/.bujorc")
     end

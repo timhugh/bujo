@@ -1,3 +1,2 @@
 base_directory = "~/.test_bujo"
 search_adapter = "ripgrep"
-exec_command = "vim %s"

@@ -15,7 +15,6 @@ module Bujo
       :config_file,
       :base_directory,
       :search_adapter,
-      :exec_command,
       keyword_init: true
     ) do
       # any variable containing a path is automatically expanded to an absolute path
@@ -56,8 +55,7 @@ module Bujo
       defaults = {
         config_file: nil,
         base_directory: "~/.bujo",
-        search_adapter: "fzf",
-        exec_command: nil
+        search_adapter: "fzf"
       }
 
       ConfigData.new(**defaults.merge(options))
