@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+# typed: true
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "debug"
+require "fakefs/safe"
 require "minitest/autorun"
 
 class Test < Minitest::Test
