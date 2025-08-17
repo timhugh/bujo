@@ -4,14 +4,13 @@ require "test_helper"
 require "bujo/search"
 
 class MockSearchAdapter
-  attr_accessor :stubbed_filename, :captured_directory
+  attr_accessor :stubbed_filename
 
   def initialize(stubbed_filename)
     @stubbed_filename = stubbed_filename
   end
 
-  def search(directory)
-    @captured_directory = directory
+  def search
     @stubbed_filename
   end
 end
@@ -32,24 +31,29 @@ module Bujo
   end
 
   class TestFzfAdapter < Minitest::Test
-    def stub_fzf_result(stdout:, stderr: "", success: true, expected_base_directory: "~/test_directory")
-      Open3.stub(:capture3, ->(executed_command) do
-        assert_equal "find '#{expected_base_directory}' -type f | fzf --preview 'head -10 {}'", executed_command
-        ["#{stdout}", "#{stderr}", Struct.new(:success?).new(success)]
+    def stub_list_result(result)
+    end
+
+    def stub_fzf_result(stdin:, stdout:, expected_base_directory: "~/test_directory")
+      Open3.stub(:popen3, ->(command, &block) do
+        assert_equal "fzf --preview 'head 10 {}'", command
+        block.call(stdin, stdout)
       end) do
         yield
       end
     end
 
-    def test_executes_fzf_on_passed_directory
+    def test_executes_fzf
+      config = Config.create(base_directory: "~/test_directory")
       stub_fzf_result(stdout: "test_file_path", expected_base_directory: "~/test_directory") do
-        assert_equal "test_file_path", Search::Adapters::Fzf.search("~/test_directory")
+        assert_equal "test_file_path", Search::Adapters::Fzf.new(config).search
       end
     end
 
     def test_strips_whitespace
+      config = Config.create(base_directory: "~/test_directory")
       stub_fzf_result(stdout: "test_file_path\n", expected_base_directory: "~/test_directory") do
-        assert_equal "test_file_path", Search::Adapters::Fzf.search("~/test_directory")
+        assert_equal "test_file_path", Search::Adapters::Fzf.new(config).search
       end
     end
   end

@@ -9,14 +9,21 @@ module Bujo
 
     module Adapters
       def self.resolve(config)
-        Adapters::Fzf
+        Adapters::Fzf.new(config)
       end
 
-      module Fzf
-        def self.search(base_directory)
-          stdout, _stderr, _status = Open3.capture3("find '#{base_directory}' -type f | fzf --preview 'head -10 {}'")
-          # TODO: seems like we should validate the output a little here
-          stdout.chomp
+      class Fzf
+        def initialize(config)
+          @config = config
+        end
+
+        def search
+          files = List.new(@config).run
+          Open3.popen3("fzf --preview 'head 10 {}'") do |stdin, stdout|
+            stdin.puts files
+            stdin.close
+            stdout.read.chomp
+          end
         end
       end
     end
@@ -26,7 +33,7 @@ module Bujo
     end
 
     def run
-      Search::Adapters.resolve(@config).search(@config.base_directory)
+      Search::Adapters.resolve(@config).search
     end
   end
 end
