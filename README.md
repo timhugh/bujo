@@ -25,23 +25,26 @@ These examples will use the default configuration. See [configuration](#configur
 # get this week's spread
 bujo spread
 
-# specify which spread you want to get
+# specify different spread spans
 bujo spread --weekly  # use the weekly spread (default)
 bujo spread --monthly  # use the monthly spread
 
-# navigate forward and backward
-bujo spread --previous  # get last week's spread
-bujo spread --weekly --previous spreads/2025/W33.md  # get the spread for the preceding week (W32.md)
-bujo spread --monthly --next spreads/2025/03-March.md  # get the spread for the following month (04-April.md)
+# get last week's spread
+bujo spread --previous
+# get the spread for the preceding week (spreads/2025/W32.md)
+bujo spread --weekly --previous spreads/2025/W33.md
+# get the spread for the following month (spreads/2025/M04-April.md)
+bujo spread --monthly --next spreads/2025/M03-March.md
 
 # open a prompt to name a new note and return the path to it
 bujo note
-bujo note "my meeting notes"  # or skip the prompt
+# or skip the prompt
+bujo note "my meeting notes"
 
 # list all of the files in your journal directory
 bujo list
 
-# open a fuzzy finder using fzf and print the selected file
+# open a fuzzy finder to search for a specific file
 bujo search
 ```
 
