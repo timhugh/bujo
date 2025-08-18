@@ -5,6 +5,19 @@ require "open3"
 
 module Bujo
   module Util
+    extend T::Sig
+
+    sig { params(hash1: T::Hash[Symbol, T.untyped], hash2: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
+    def self.deep_merge(hash1, hash2)
+      hash1.merge(hash2) do |key, old_value, new_value|
+        if old_value.is_a?(Hash) && new_value.is_a?(Hash)
+          deep_merge(old_value, new_value)
+        else
+          new_value
+        end
+      end
+    end
+
     class Command
       extend T::Sig
 

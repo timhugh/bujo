@@ -27,8 +27,8 @@ module Bujo
 
         sig { returns(String) }
         def search
-          files = List.new(@config).run
-          Util::Command.new("fzf --preview 'head 10 {}'").execute(files.to_s).chomp
+          files = List.new(@config).run.join("\n")
+          Util::Command.new("fzf --preview 'head 10 {}'").execute(files).chomp
         end
       end
     end

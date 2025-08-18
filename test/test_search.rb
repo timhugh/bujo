@@ -10,7 +10,7 @@ module Bujo
     end
 
     def test_searches_with_fzf_adapter
-      config = Config.create(search_adapter: "fzf")
+      config = Config.new(search_adapter: "fzf")
       stubs { @search_adapter.search }.with { "test_file_path" }
       assert_equal "test_file_path", Search.new(config).run
     end
@@ -19,7 +19,7 @@ module Bujo
   class TestFzfAdapter < Minitest::Test
     def setup
       super
-      @files = List.new.run.to_s
+      @files = List.new.run.join("\n")
       @config = Config.load
       @command = Mocktail.of_next(Util::Command)
     end

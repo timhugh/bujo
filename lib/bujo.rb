@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 # typed: true
 
+require_relative "bujo/core_ext"
 require_relative "bujo/cli"
 require "dry/cli"
 
