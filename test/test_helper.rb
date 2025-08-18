@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: true
+# typed: strict
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "debug"
@@ -18,7 +18,9 @@ class Minitest::Test
   extend T::Sig
   include Mocktail::DSL
 
+  sig { void }
   def teardown
+    super
     Mocktail.reset
   end
 end
