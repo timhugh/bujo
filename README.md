@@ -21,7 +21,7 @@ Dependencies vary by configuration:
 
 These examples will use the default configuration. See [configuration](#configuration) to learn how you can customize your journal, and see [setup examples](#setup-examples) for ideas on how to integrate this into your setup.
 
-```
+```sh
 # get this week's spread
 bujo spread
 
