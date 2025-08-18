@@ -26,6 +26,9 @@ module Bujo
       spreads: {
         weekly: {
           filename_format: "spreads/%Y/W%V"
+        },
+        monthly: {
+          filename_format: "spreads/%Y/M%m-%B"
         }
       }
     }.freeze, T::Hash[Symbol, T.untyped])

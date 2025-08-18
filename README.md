@@ -19,9 +19,31 @@ Dependencies vary by configuration:
 
 ## Usage
 
-These examples will use the default configuration. See [configuration](#configuration) to learn how you can customize your journal.
+These examples will use the default configuration. See [configuration](#configuration) to learn how you can customize your journal, and see [setup examples](#setup-examples) for ideas on how to integrate this into your setup.
 
-- `bujo search` - opens a fuzzy finder using fzf and returns the selected file to STDOUT
+```
+# get this week's spread
+bujo spread
+
+# specify which spread you want to get
+bujo spread --weekly  # use the weekly spread (default)
+bujo spread --monthly  # use the monthly spread
+
+# navigate forward and backward
+bujo spread --previous  # get last week's spread
+bujo spread --weekly --previous spreads/2025/W33.md  # get the spread for the preceding week (W32.md)
+bujo spread --monthly --next spreads/2025/03-March.md  # get the spread for the following month (04-April.md)
+
+# open a prompt to name a new note and return the path to it
+bujo note
+bujo note "my meeting notes"  # or skip the prompt
+
+# list all of the files in your journal directory
+bujo list
+
+# open a fuzzy finder using fzf and print the selected file
+bujo search
+```
 
 ## Configuration
 
@@ -47,24 +69,24 @@ In `~/.config/zed/tasks.json`:
     "hide": "on_success"
   },
   {
-    "label": "Bujo: now",
-    "command": "zed $(bujo now)",
+    "label": "Bujo: current spread",
+    "command": "zed $(bujo spread)",
     "use_new_terminal": true,
     "allow_concurrent_runs": false,
     "reveal": "no_focus",
     "hide": "on_success"
   },
   {
-    "label": "Bujo: next",
-    "command": "zed $(bujo next '$ZED_FILE')",
+    "label": "Bujo: next spread",
+    "command": "zed $(bujo spread --next '$ZED_FILE')",
     "use_new_terminal": true,
     "allow_concurrent_runs": false,
     "reveal": "no_focus",
     "hide": "on_success"
   },
   {
-    "label": "Bujo: previous",
-    "command": "zed $(bujo previous '$ZED_FILE')",
+    "label": "Bujo: previous spread",
+    "command": "zed $(bujo spread --previous '$ZED_FILE')",
     "use_new_terminal": true,
     "allow_concurrent_runs": false,
     "reveal": "no_focus",
@@ -73,7 +95,7 @@ In `~/.config/zed/tasks.json`:
 ]
 ```
 
-The key here is that non-interactive tasks like `bujo now` don't reveal at all, and interactive tasks like `bujo search` will auto-close which makes them feel like a picker modal.
+The key here is that non-interactive tasks like `bujo spread` don't reveal at all, and interactive tasks like `bujo search` will auto-close which makes them feel like a picker modal.
 
 Then in `~/.config/zed/keymap.json` (note that I use `,` as a leader key, adjust to your tastes):
 
@@ -82,9 +104,9 @@ Then in `~/.config/zed/keymap.json` (note that I use `,` as a leader key, adjust
   {
     "context": "Workspace",
     "bindings": {
-      ", n n": ["task:Spawn", { "task_name": "Bujo: now" }],
-      ", n f": ["task:Spawn", { "task_name": "Bujo: next" }],
-      ", n b": ["task:Spawn", { "task_name": "Bujo: previous" }],
+      ", n n": ["task:Spawn", { "task_name": "Bujo: current spread" }],
+      ", n f": ["task:Spawn", { "task_name": "Bujo: next spread" }],
+      ", n b": ["task:Spawn", { "task_name": "Bujo: previous spread" }],
       ", n s": ["task:Spawn", { "task_name": "Bujo: search" }]
     }
   }
