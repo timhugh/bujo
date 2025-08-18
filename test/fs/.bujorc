@@ -1,2 +1,2 @@
-base_directory = "~/.test_bujo"
-search_adapter = "ripgrep"
+base_directory = "~/.bujo"
+search_adapter = "fzf"

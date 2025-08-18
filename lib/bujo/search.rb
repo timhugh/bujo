@@ -3,38 +3,56 @@
 
 require "open3"
 require_relative "config"
+require_relative "util"
 
 module Bujo
   class Search
-    class ExecError < StandardError; end
+    extend T::Sig
 
     module Adapters
-      def self.resolve(config)
-        Adapters::Fzf.new(config)
+      class Adapter
+        extend T::Sig
+
+        sig { returns(String) }
+        def search
+          raise NotImplementedError, "search method must be implemented"
+        end
       end
 
-      class Fzf
+      class Fzf < Adapter
+        sig { params(config: Config).void }
         def initialize(config)
           @config = config
         end
 
+        sig { returns(String) }
         def search
           files = List.new(@config).run
-          Open3.popen3("fzf --preview 'head 10 {}'") do |stdin, stdout|
-            stdin.puts files
-            stdin.close
-            stdout.read.chomp
-          end
+          Util::Command.new("fzf --preview 'head 10 {}'").execute(files.to_s).chomp
         end
       end
     end
 
+    sig { params(config: Config).void }
     def initialize(config = Config.load)
       @config = config
     end
 
+    sig { returns(String) }
     def run
-      Search::Adapters.resolve(@config).search
+      search_adapter.search
+    end
+
+    private
+
+    sig { returns(Search::Adapters::Fzf) }
+    def search_adapter
+      case @config.search_adapter
+      when "fzf"
+        Adapters::Fzf.new(@config)
+      else
+        raise ConfigurationError, "unsupported search adapter #{@config.search_adapter}"
+      end
     end
   end
 end

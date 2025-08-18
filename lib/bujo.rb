@@ -6,7 +6,12 @@ require "dry/cli"
 
 module Bujo
   extend T::Sig
+
   class Error < StandardError; end
+
+  class ConfigurationError < Error; end
+
+  class ExecutionError < Error; end
 
   sig { void }
   def self.run

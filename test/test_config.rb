@@ -4,7 +4,7 @@
 require "test_helper"
 
 module Bujo
-  class TestConfig < Test
+  class TestConfig < Minitest::Test
     def setup
       super
       @default_values = {
@@ -51,19 +51,19 @@ module Bujo
     def test_loads_default_config_file
       expected_values = {
         config_file: "~/.bujorc",
-        base_directory: "~/.test_bujo",
-        search_adapter: "ripgrep"
+        base_directory: "~/.bujo",
+        search_adapter: "fzf"
       }
       assert_config_values expected_values, Config.load
     end
 
     def test_loads_config_from_file
       expected_values = {
-        config_file: "~/.bujorc",
+        config_file: "~/valid_config.toml",
         base_directory: "~/.test_bujo",
         search_adapter: "ripgrep"
       }
-      assert_config_values expected_values, Config.load("~/.bujorc")
+      assert_config_values expected_values, Config.load("~/valid_config.toml")
     end
 
     def test_creates_config_and_uses_defaults_if_missing
@@ -76,7 +76,7 @@ module Bujo
     end
 
     def test_raises_error_for_invalid_config_file
-      assert_raises(Config::ParseError) { Config.load("~/invalid_config.toml") }
+      assert_raises(ConfigurationError) { Config.load("~/invalid_config.toml") }
     end
   end
 end
