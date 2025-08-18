@@ -54,7 +54,7 @@ Bujo config lives in the Toml file `~/.bujorc`. Please refer to the [in-source d
 As noted above, the CLI itself does not do much on its own, but is designed to be paired with an editor for a full journal experience. These examples are not prescriptive and are only intended to give you some ideas for how you can leverage it on your own. Feel free to experiment!
 
 <details>
-<summary>Zed<summary>
+  <summary>Zed</summary>
 
 In `~/.config/zed/tasks.json`:
 
@@ -117,7 +117,7 @@ Then in `~/.config/zed/keymap.json` (note that I use `,` as a leader key, adjust
 
 ## History
 
-I created [Bujo.nvim](https://github.com/timhugh/bujo.nvim) as sort of mishmash of Obsidian and Orgmode accessible from any project I have open in Neovim. I love using Neovim, but I also sometimes use other editors and I didn't love the friction of having to open up Neovim in a terminal to use my journal anytime I was moonlighting in Cursor or Zed.
+I created [Bujo.nvim](https://github.com/timhugh/bujo.nvim) as a sort of mishmash of Obsidian and Orgmode accessible from any project I have open in Neovim. I love using Neovim, but I also sometimes use other editors and I didn't love the friction of having to open up Neovim in a terminal to use my journal anytime I was moonlighting in Cursor or Zed.
 
 The original idea for this was to just duplicate Bujo.nvim in Rust as a Zed extension, but Zed's extension API doesn't yet support custom commands and then I would have to duplicate it again to support VSCode, Cursor, Jetbrains, etc. so I needed a better approach. Luckily, 90% of the functionality of the Bujo.nvim plugin is actually just finding and opening files, which is a very trivial thing to do!
 
