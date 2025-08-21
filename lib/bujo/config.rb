@@ -16,7 +16,7 @@ module Bujo
     sig { returns(Symbol) }
     attr_reader :default_spread
 
-    sig { returns(T::Hash[String, Spread]) }
+    sig { returns(T::Hash[String, SpreadConfig]) }
     attr_reader :spreads
 
     DEFAULTS = T.let({
@@ -46,8 +46,8 @@ module Bujo
       @search_adapter = T.let(merged_options.delete(:search_adapter), String)
       @default_spread = T.let(merged_options.delete(:default_spread).to_sym, Symbol)
       @spreads = T.let(merged_options.delete(:spreads).each_with_object({}) do |(name, config), acc|
-        acc[name] = Spread.new(config)
-      end, T::Hash[String, Spread])
+        acc[name] = SpreadConfig.new(config)
+      end, T::Hash[String, SpreadConfig])
       unless merged_options.empty?
         raise ConfigurationError, "Configuration has unexpected keys: #{merged_options.keys.join(", ")}"
       end
@@ -62,7 +62,7 @@ module Bujo
     end
   end
 
-  class Spread
+  class SpreadConfig
     extend T::Sig
 
     sig { returns(String) }
