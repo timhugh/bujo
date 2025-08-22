@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 # typed: strict
 
+require "sorbet-runtime"
+require "dry/cli"
 require_relative "bujo/core_ext"
 require_relative "bujo/cli"
-require "dry/cli"
 
 module Bujo
   extend T::Sig

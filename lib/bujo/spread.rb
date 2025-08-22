@@ -12,24 +12,11 @@ module Bujo
 
     sig { params(spread_config_key: Symbol).returns(String) }
     def current(spread_config_key: @config.default_spread)
-      ""
-    end
-
-    sig { params(spread_config_key: Symbol, current_spread: T.nilable(String)).returns(String) }
-    def next(spread_config_key: @config.default_spread, current_spread: nil)
-      ""
-    end
-
-    sig { params(spread_config_key: Symbol, current_spread: T.nilable(String)).returns(String) }
-    def previous(spread_config_key: @config.default_spread, current_spread: nil)
-      ""
-    end
-
-    private
-
-    sig { params(spread_config: Spread, current_spread: String).returns(DateTime) }
-    def date_from_current_spread(spread_config, current_spread)
-      DateTime.now
+      # TODO: validate config
+      spread_config = @config.spreads[spread_config_key]
+      raise ConfigurationError, "Spread config #{spread_config_key} does not exist" unless spread_config
+      current_spread_file = DateTime.now.strftime(spread_config.filename_format)
+      File.join(@config.base_directory, current_spread_file)
     end
   end
 end

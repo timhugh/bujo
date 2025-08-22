@@ -16,7 +16,7 @@ module Bujo
     sig { returns(Symbol) }
     attr_reader :default_spread
 
-    sig { returns(T::Hash[String, SpreadConfig]) }
+    sig { returns(T::Hash[Symbol, SpreadConfig]) }
     attr_reader :spreads
 
     DEFAULTS = T.let({
@@ -25,10 +25,10 @@ module Bujo
       default_spread: "weekly",
       spreads: {
         weekly: {
-          filename_format: "spreads/%Y/W%V"
+          filename_format: "spreads/%Y/W%V.md"
         },
         monthly: {
-          filename_format: "spreads/%Y/M%m-%B"
+          filename_format: "spreads/%Y/M%m-%B.md"
         }
       }
     }.freeze, T::Hash[Symbol, T.untyped])
@@ -46,8 +46,8 @@ module Bujo
       @search_adapter = T.let(merged_options.delete(:search_adapter), String)
       @default_spread = T.let(merged_options.delete(:default_spread).to_sym, Symbol)
       @spreads = T.let(merged_options.delete(:spreads).each_with_object({}) do |(name, config), acc|
-        acc[name] = SpreadConfig.new(config)
-      end, T::Hash[String, SpreadConfig])
+        acc[name.to_sym] = SpreadConfig.new(config)
+      end, T::Hash[Symbol, SpreadConfig])
       unless merged_options.empty?
         raise ConfigurationError, "Configuration has unexpected keys: #{merged_options.keys.join(", ")}"
       end

@@ -12,7 +12,7 @@ module Bujo
 
       sig { void }
       def call
-        Spread.new
+        puts Bujo::Spread.new.current
       end
     end
   end
