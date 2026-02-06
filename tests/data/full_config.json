@@ -1,0 +1,32 @@
+{
+	"journal_root_dir": "~/my_journal",
+	"templates_dir": "my_templates",
+	"notes_dir": "my_notes",
+	"notes": [
+		{
+			"key": "daily-sync",
+			"directory": "daily_sync_notes",
+			"default_template": "daily_sync_template.md"
+		}
+	],
+	"spreads_dir": "my_spreads",
+	"spreads": [
+		{
+			"key": "daily",
+			"directory": "daily_spreads",
+			"filename_template": "%Y-%m-%d.md",
+			"default_template": "daily_spread_template.md"
+		},
+		{
+			"key": "monthly",
+			"directory": "monthly_spreads",
+			"filename_template": "%Y-%m.md",
+			"default_template": "monthly_spread_template.md"
+		}
+	],
+	"git": {
+		"auto_commit": true,
+		"commit_message_template": "update %D",
+		"min_commit_interval_seconds": 60
+	}
+}
