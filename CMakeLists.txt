@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 PROJECT(bujo)
-SET(CMAKE_CXX_STANDARD 20)
+SET(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -36,6 +36,7 @@ if (BUILD_TESTING)
 
 	add_executable(bujo_tests
 		tests/test_config.cpp
+		tests/test_date.cpp
 		tests/test_span.cpp
 		tests/test_templates.cpp
 	)

@@ -6,6 +6,7 @@ all: build
 
 build/CMakeCache.txt: CMakeLists.txt vcpkg.json vcpkg-configuration.json
 	@cmake -B build -S . \
+		-DCMAKE_BUILD_TYPE=Debug \
 		-DCMAKE_TOOLCHAIN_FILE=$(vcpkg_toolchain)
 configure: build/CMakeCache.txt
 

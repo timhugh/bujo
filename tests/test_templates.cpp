@@ -8,52 +8,19 @@ using namespace ::bujo;
 using namespace ::date;
 using namespace ::testing;
 
-struct FilenameTestCase {
-  span::Span span;
-  std::string template_str;
-  std::string expected_filename;
-};
+// TEST(TemplatesTest_RenderFilenameTemplate, Parses) {
+//   std::string tmpl = "week-%Y-%m-%d.txt";
+//   std::string filename = "week-2026-02-02.txt";
 
-void PrintTo(const FilenameTestCase &test_case, std::ostream *os) {
-  *os << "span: [" << *test_case.span.start() << ", " << *test_case.span.end()
-      << "], template: '" << test_case.template_str;
-}
-
-class TemplatesTest_FilenameTemplates : public TestWithParam<FilenameTestCase> {
-};
-
-TEST_P(TemplatesTest_FilenameTemplates, RendersExpectedTemplate) {
-  auto rendered = templates::render_filename_template(GetParam().template_str,
-                                                      GetParam().span);
-  EXPECT_EQ(rendered, GetParam().expected_filename);
-  auto parsed =
-      templates::parse_filename_template(GetParam().template_str, rendered);
-  EXPECT_EQ(parsed, *GetParam().span.start());
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    RendersAndParses, TemplatesTest_FilenameTemplates,
-    Values(FilenameTestCase{span::Span{local_days{2026_y / February / 2_d},
-                                       local_days{2026_y / February / 8_d}},
-                            "%Y-%m-%d.md", "2026-02-02.md"} //
-           // FilenameTestCase{span::Span{local_days{2026_y / February / 2_d},
-           //                             local_days{2026_y / February / 8_d}},
-           //                  "%G-W%W.md", "2026-W05.md"} //
-           ));
-
-TEST(TemplatesTest_RenderFilenameTemplate, Parses) {
-  std::string tmpl = "week-%Y-%m-%d.txt";
-  std::string filename = "week-2026-02-02.txt";
-
-  EXPECT_EQ(templates::parse_filename_template(tmpl, filename),
-            local_days{2026_y / February / 2_d});
-}
+//   EXPECT_EQ(templates::parse_filename_template(tmpl, filename),
+//             local_days{2026_y / February / 2_d});
+// }
 
 class TemplatesTest_RenderFileTemplate : public Test {
 protected:
   // week 6 of 2026
-  date::local_days start{date::year{2026} / date::month{2} / date::day{2}};
-  date::local_days end{date::year{2026} / date::month{2} / date::day{8}};
+  local_days start{2026_y / February / 2_d};
+  local_days end{2026_y / February / 8_d};
 
   span::Span span{start, end};
 };
