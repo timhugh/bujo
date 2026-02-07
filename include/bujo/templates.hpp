@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bujo/date.hpp"
+#include "bujo/span.hpp"
 #include <date/date.h>
 #include <inja/environment.hpp>
 #include <inja/function_storage.hpp>
@@ -12,7 +12,7 @@ namespace bujo::templates {
 
 namespace {
 
-inline inja::json to_json(const date::Span &span) {
+inline inja::json to_json(const span::Span &span) {
   std::vector<inja::json> days;
   for (auto day : span.days()) {
     days.push_back({
@@ -37,7 +37,7 @@ inline std::string date_format(const std::string &iso_date,
 } // namespace
 
 inline const std::string render(const std::string &tmpl,
-                                const date::Span &span) {
+                                const span::Span &span) {
   inja::Environment env;
 
   env.add_callback("date_format", [](const inja::Arguments &args) {
