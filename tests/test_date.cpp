@@ -42,6 +42,10 @@ TEST(DateTest, ParseErrors) {
   // literal mismatch
   EXPECT_THROW(parse("%Y-%m-%d.md", "2026-04-12.txt"), std::invalid_argument);
 
+  // trailing characters
+  EXPECT_THROW(parse("%Y-%m-%d", "2026-04-12x"), std::invalid_argument);
+  EXPECT_THROW(parse("%Y-%m-%d", "x2026-04-12"), std::invalid_argument);
+
   // invalid format
   EXPECT_THROW(parse("%Y-%m-%", "2026-02"), std::invalid_argument);
 

@@ -8,13 +8,13 @@ using namespace ::bujo;
 using namespace ::date;
 using namespace ::testing;
 
-// TEST(TemplatesTest_RenderFilenameTemplate, Parses) {
-//   std::string tmpl = "week-%Y-%m-%d.txt";
-//   std::string filename = "week-2026-02-02.txt";
+TEST(TemplatesTest_RenderFilenameTemplate, Parses) {
+  std::string tmpl = "%Y-%m-%d.txt";
+  std::string filename = "2026-02-02.txt";
 
-//   EXPECT_EQ(templates::parse_filename_template(tmpl, filename),
-//             local_days{2026_y / February / 2_d});
-// }
+  EXPECT_EQ(templates::parse_filename_template(tmpl, filename),
+            local_days{2026_y / February / 2_d});
+}
 
 class TemplatesTest_RenderFileTemplate : public Test {
 protected:

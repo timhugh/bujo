@@ -31,9 +31,10 @@ inline std::string render_filename_template(const std::string &tmpl,
   return span.start().format(tmpl);
 }
 
-// inline const ::date::local_days
-// parse_filename_template(const std::string &tmpl, const std::string &filename)
-// {}
+inline const ::date::local_days
+parse_filename_template(const std::string &tmpl, const std::string &filename) {
+  return date::parse(tmpl, filename);
+}
 
 inline const std::string render_file_template(const std::string &tmpl,
                                               const span::Span &span) {
