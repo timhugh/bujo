@@ -51,3 +51,27 @@ TEST(DateTest_Day, StringFormat) {
 
   EXPECT_EQ(day.format("%Y-%m-%d"), "2026-02-02");
 }
+
+TEST(DateTest_SpanFactory, FromTemplate) {
+  local_days reference_date{2026_y / February / 4_d};
+
+  // daily template
+  span::Span daily_span = span::Span::from_template("%Y-%m-%d", reference_date);
+  EXPECT_EQ(*daily_span.start(), reference_date);
+  EXPECT_EQ(*daily_span.end(), reference_date);
+
+  // weekly template
+  span::Span weekly_span = span::Span::from_template("%G-%V", reference_date);
+  EXPECT_EQ(*weekly_span.start(), local_days{2026_y / February / 2_d});
+  EXPECT_EQ(*weekly_span.end(), local_days{2026_y / February / 8_d});
+
+  // monthly template
+  span::Span monthly_span = span::Span::from_template("%Y-%m", reference_date);
+  EXPECT_EQ(*monthly_span.start(), local_days{2026_y / February / 1_d});
+  EXPECT_EQ(*monthly_span.end(), local_days{2026_y / February / 28_d});
+
+  // yearly template
+  span::Span yearly_span = span::Span::from_template("%Y", reference_date);
+  EXPECT_EQ(*yearly_span.start(), local_days{2026_y / January / 1_d});
+  EXPECT_EQ(*yearly_span.end(), local_days{2026_y / December / 31_d});
+}

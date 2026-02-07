@@ -41,8 +41,11 @@ inline const std::string render_file_template(const std::string &tmpl,
   inja::Environment env;
 
   env.add_callback("date_format", [](const inja::Arguments &args) {
-    return date::format(args.at(0)->get<std::string>(),
-                        args.at(1)->get<std::string>());
+    const auto &date_string = args.at(0)->get<std::string>();
+    const auto &fmt = args.at(1)->get<std::string>();
+
+    ::date::local_days parsed_date = date::parse("%Y-%m-%d", date_string);
+    return date::format(parsed_date, fmt);
   });
 
   return env.render(tmpl, {{"span", to_json(span)}});

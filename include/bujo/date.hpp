@@ -8,23 +8,9 @@
 
 namespace bujo::date {
 
-inline std::string format(const std::string &iso_date, const std::string &fmt) {
-  std::istringstream in(iso_date);
-  ::date::year_month_day ymd;
-  in >> ::date::parse("%F", ymd);
-  if (!in) {
-    throw std::invalid_argument(fmt::format("Invalid ISO date: {}", iso_date));
-  }
-  in >> std::ws;
-  if (!in.eof()) {
-    throw std::invalid_argument(
-        fmt::format("Invalid ISO date (trailing): {}", iso_date));
-  }
-  if (!ymd.ok()) {
-    throw std::invalid_argument(
-        fmt::format("Invalid date components in ISO date: {}", iso_date));
-  }
-  return ::date::format(fmt, ymd);
+inline std::string format(const ::date::local_days &date,
+                          const std::string &fmt) {
+  return ::date::format(fmt, date);
 }
 
 enum class field { year_Y, iso_year_G, month_m, day_d, iso_week_V, week_W };
