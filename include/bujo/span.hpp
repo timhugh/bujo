@@ -77,6 +77,9 @@ public:
 
   Range<date::days> days() const { return Range<date::days>{start_, end_}; }
 
+  Day start() const { return start_; }
+  Day end() const { return end_; }
+
 private:
   date::local_days start_;
   date::local_days end_;

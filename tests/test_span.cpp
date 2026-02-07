@@ -5,13 +5,21 @@
 using namespace ::bujo;
 using namespace ::testing;
 
-TEST(DateTest_Span, IterateDays) {
+class DateTest_Span : public ::testing::Test {
+protected:
   // week 6 of 2026
   date::local_days start{date::year{2026} / date::month{2} / date::day{2}};
   date::local_days end{date::year{2026} / date::month{2} / date::day{8}};
 
   span::Span span{start, end};
+};
 
+TEST_F(DateTest_Span, StartAndEnd) {
+  EXPECT_EQ(*span.start(), start);
+  EXPECT_EQ(*span.end(), end);
+}
+
+TEST_F(DateTest_Span, IterateDays) {
   std::vector<date::local_days> iterated_days;
 
   for (auto day : span.days()) {
@@ -27,7 +35,7 @@ TEST(DateTest_Span, IterateDays) {
   EXPECT_THAT(iterated_days, ElementsAreArray(expected_days));
 }
 
-TEST(DateTest_Span, InvalidSpan) {
+TEST(DateTest_SpanErrors, InvalidSpan) {
   // start is after end
   date::local_days start{date::year{2026} / date::month{2} / date::day{2}};
   date::local_days end{date::year{2026} / date::month{2} / date::day{1}};
