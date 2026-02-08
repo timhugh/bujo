@@ -37,6 +37,7 @@ if (BUILD_TESTING)
 	add_executable(bujo_tests
 		tests/test_config.cpp
 		tests/test_date.cpp
+		tests/test_path.cpp
 		tests/test_span.cpp
 		tests/test_templates.cpp
 	)

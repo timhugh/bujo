@@ -11,7 +11,8 @@ namespace bujo::config {
 
 using json = nlohmann::json;
 
-static const std::string default_file_path = "~/.config/bujo/config.json";
+static const std::filesystem::path default_file_path =
+    "~/.config/bujo/config.json";
 
 class missing_file_exception : public std::runtime_error {
 public:
@@ -30,7 +31,7 @@ public:
 
 struct note_config {
   std::string key;
-  std::optional<std::string> directory;
+  std::optional<std::filesystem::path> directory;
   std::optional<std::string> default_template;
 
   NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(note_config, key, directory,
@@ -40,7 +41,7 @@ struct note_config {
 struct spread_config {
   std::string key;
   std::string filename_template;
-  std::optional<std::string> directory;
+  std::optional<std::filesystem::path> directory;
   std::optional<std::string> default_template;
 
   NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(spread_config, key,
@@ -59,13 +60,15 @@ struct git_config {
 };
 
 struct journal_config {
-  std::string journal_root_dir = "~/bujo";
-  std::optional<std::string> templates_dir = std::make_optional("templates");
+  std::filesystem::path journal_root_dir = "~/bujo";
+  std::optional<std::filesystem::path> templates_dir =
+      std::make_optional("templates");
 
-  std::optional<std::string> notes_dir = std::make_optional("notes");
+  std::optional<std::filesystem::path> notes_dir = std::make_optional("notes");
   std::vector<note_config> notes;
 
-  std::optional<std::string> spreads_dir = std::make_optional("spreads");
+  std::optional<std::filesystem::path> spreads_dir =
+      std::make_optional("spreads");
   std::vector<spread_config> spreads;
 
   git_config git;
@@ -75,7 +78,7 @@ struct journal_config {
                                               spreads_dir, spreads, git);
 };
 
-static inline journal_config load_from_file(std::string file_path) {
+static inline journal_config load_from_file(std::filesystem::path file_path) {
   std::ifstream f(file_path);
   if (!f.is_open()) {
     throw missing_file_exception(file_path);
