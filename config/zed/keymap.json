@@ -1,0 +1,13 @@
+[
+	{
+		"context": "Workspace && !CommandPalette && !(vim_mode == insert)",
+		"bindings": {
+			", n n": ["task::Spawn", { "task_name": "Bujo current" }],
+			", n s": ["task::Spawn", { "task_name": "Bujo search" }],
+			", n f": ["task::Spawn", { "task_name": "Bujo next" }],
+			", n F": ["task::Spawn", { "task_name": "Bujo forward" }],
+			", n b": ["task::Spawn", { "task_name": "Bujo previous" }],
+			", n B": ["task::Spawn", { "task_name": "Bujo backward" }],
+		},
+	},
+]
