@@ -3,37 +3,44 @@
 #include "bujo/exec.hpp"
 #include "bujo/path.hpp"
 #include "bujo/spreads.hpp"
-#include <_stdio.h>
 #include <argh.h>
 #include <date/date.h>
 #include <deque>
+#include <fmt/format.h>
 #include <iostream>
 #include <optional>
 #include <stdexcept>
+#include <stdio.h>
 
 void output(std::string_view msg) { std::cout << msg << std::endl; }
 
 void log(std::string_view msg) { std::cerr << msg << std::endl; }
 
-void spread_command(argh::parser &cli, std::deque<std::string> pos_args) {
+bujo::config::journal_config load_config(argh::parser &cli) {
   std::filesystem::path config_path;
   cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
   auto expanded_config_path = bujo::path::expand(config_path);
-  auto cfg = bujo::config::load_from_file(expanded_config_path);
+  return bujo::config::load_from_file(expanded_config_path);
+}
 
-  std::string sub_command;
-  if (pos_args.empty()) {
+std::optional<std::string> pop_arg(std::deque<std::string> args) {
+  if (args.empty()) {
+    return std::nullopt;
+  }
+  std::string command = args.front();
+  args.pop_front();
+  return command;
+}
+
+void spread_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
+
+  auto sub_command = pop_arg(args);
+  if (!sub_command) {
     sub_command = "current";
-  } else {
-    sub_command = pos_args.front();
-    pos_args.pop_front(); // remove the sub-command from the arguments
   }
 
-  std::optional<std::filesystem::path> reference_filename;
-  if (!pos_args.empty()) {
-    reference_filename = pos_args.front();
-    pos_args.pop_front(); // remove the reference filename from the arguments
-  }
+  std::optional<std::filesystem::path> reference_filename = pop_arg(args);
 
   std::optional<std::string> spread_config_key;
   for (const auto &spread : cfg.spreads) {
@@ -66,23 +73,18 @@ void spread_command(argh::parser &cli, std::deque<std::string> pos_args) {
     return;
   }
 
-  throw std::invalid_argument("Unknown sub-command for spread: " + sub_command);
+  throw std::invalid_argument("Unknown sub-command for spread: " +
+                              *sub_command);
 }
 
-void note_command(argh::parser &cli, std::deque<std::string> pos_args) {
-  std::filesystem::path config_path;
-  cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
-  auto expanded_config_path = bujo::path::expand(config_path);
-  auto cfg = bujo::config::load_from_file(expanded_config_path);
+void note_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
 
   log("Note command executed");
 }
 
-void list_command(argh::parser &cli, std::deque<std::string> pos_args) {
-  std::filesystem::path config_path;
-  cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
-  auto expanded_config_path = bujo::path::expand(config_path);
-  auto cfg = bujo::config::load_from_file(expanded_config_path);
+void list_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
 
   auto all_documents = bujo::documents::list_all(cfg, false);
 
@@ -91,11 +93,8 @@ void list_command(argh::parser &cli, std::deque<std::string> pos_args) {
   }
 }
 
-void search_command(argh::parser &cli, std::deque<std::string> pos_args) {
-  std::filesystem::path config_path;
-  cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
-  auto expanded_config_path = bujo::path::expand(config_path);
-  auto cfg = bujo::config::load_from_file(expanded_config_path);
+void search_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
 
   auto all_documents = bujo::documents::list_all(cfg, true);
   std::vector<std::string> document_names;
@@ -117,31 +116,28 @@ int main(int argc, char *argv[]) {
 
     cli.parse(argv);
 
-    std::deque<std::string> pos_args(cli.pos_args().begin(),
-                                     cli.pos_args().end());
-    pos_args.pop_front(); // remove the program name
+    std::deque<std::string> args(cli.pos_args().begin(), cli.pos_args().end());
+    auto program_name = pop_arg(args);
 
-    if (pos_args.empty()) {
+    if (args.empty()) {
       log("No command provided");
       return 1;
     }
 
-    const std::string command = pos_args.front();
-    pos_args.pop_front(); // remove the command from the arguments
-
+    auto command = pop_arg(args);
     if (command == "spread") {
-      spread_command(cli, std::move(pos_args));
+      spread_command(cli, std::move(args));
     } else if (command == "note") {
-      note_command(cli, std::move(pos_args));
+      note_command(cli, std::move(args));
     } else if (command == "list") {
-      list_command(cli, std::move(pos_args));
+      list_command(cli, std::move(args));
     } else if (command == "search") {
-      search_command(cli, std::move(pos_args));
+      search_command(cli, std::move(args));
     } else {
-      throw std::invalid_argument("Unknown command: " + command);
+      throw std::invalid_argument("Unknown command: " + *command);
     }
   } catch (const std::exception &e) {
-    log(std::string("Error: ") + e.what());
+    log(fmt::format("Error: {}", e.what()));
     return 1;
   }
 }
