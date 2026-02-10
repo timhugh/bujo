@@ -1,5 +1,6 @@
 #include "bujo/config.hpp"
 #include "bujo/documents.hpp"
+#include "bujo/exec.hpp"
 #include "bujo/path.hpp"
 #include "bujo/spreads.hpp"
 #include <_stdio.h>
@@ -83,7 +84,7 @@ void list_command(argh::parser &cli, std::deque<std::string> pos_args) {
   auto expanded_config_path = bujo::path::expand(config_path);
   auto cfg = bujo::config::load_from_file(expanded_config_path);
 
-  auto all_documents = bujo::documents::list_all(cfg);
+  auto all_documents = bujo::documents::list_all(cfg, false);
 
   for (const auto &doc : all_documents) {
     output(doc.string());
@@ -96,9 +97,16 @@ void search_command(argh::parser &cli, std::deque<std::string> pos_args) {
   auto expanded_config_path = bujo::path::expand(config_path);
   auto cfg = bujo::config::load_from_file(expanded_config_path);
 
-  auto all_documents = bujo::documents::list_all(cfg);
+  auto all_documents = bujo::documents::list_all(cfg, true);
+  std::vector<std::string> document_names;
+  for (const auto &doc : all_documents) {
+    document_names.push_back(doc.string());
+  }
 
-  log("Search command executed");
+  auto selected = bujo::exec::fzf_select(document_names);
+  std::filesystem::path selected_absolute =
+      bujo::config::journal_dir(cfg) / selected;
+  output(selected_absolute.string());
 }
 
 int main(int argc, char *argv[]) {
