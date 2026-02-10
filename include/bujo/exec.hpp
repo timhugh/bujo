@@ -1,3 +1,4 @@
+#include "bujo/config.hpp"
 #include <cstddef>
 #include <cstring>
 #include <string>
@@ -67,6 +68,30 @@ inline std::string fzf_select(const std::vector<std::string> &items) {
   }
 
   return result;
+}
+
+inline void editor(const config::journal_config &cfg,
+                   const std::filesystem::path &target) {
+  std::string editor = std::getenv("EDITOR");
+  if (editor.empty()) {
+    throw std::runtime_error("EDITOR environment variable is not set");
+  }
+  std::string command = fmt::format("{} {}", editor, target.string());
+  system(command.c_str());
+}
+
+inline void git_commit(const config::journal_config &cfg,
+                       const std::string &message) {
+  auto base_path = config::journal_dir(cfg);
+  system(fmt::format("cd {} && git add .", base_path.string()).c_str());
+  system(
+      fmt::format("cd {} && git commit -m \"{}\"", base_path.string(), message)
+          .c_str());
+}
+
+inline void git_push(const config::journal_config &cfg) {
+  auto base_path = config::journal_dir(cfg);
+  system(fmt::format("cd {} && git push", base_path.string()).c_str());
 }
 
 } // namespace bujo::exec

@@ -31,9 +31,8 @@ TEST(ConfigTest, LoadFromFile) {
   EXPECT_EQ("%Y-%m.md", c.spreads[1].filename_template);
   EXPECT_EQ("monthly_spread_template.md", c.spreads[1].default_template);
 
-  EXPECT_TRUE(c.git.auto_commit);
+  EXPECT_TRUE(c.git.auto_push);
   EXPECT_EQ("update %D", c.git.commit_message_template);
-  EXPECT_EQ(60, c.git.min_commit_interval_seconds);
 }
 
 TEST(ConfigTest, LoadMissingFile) {

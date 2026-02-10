@@ -51,13 +51,11 @@ struct spread_config {
 };
 
 struct git_config {
-  bool auto_commit;
+  bool auto_push;
   std::optional<std::string> commit_message_template;
-  std::optional<int> min_commit_interval_seconds;
 
-  NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(git_config, auto_commit,
-                                              commit_message_template,
-                                              min_commit_interval_seconds);
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(git_config, auto_push,
+                                              commit_message_template);
 };
 
 struct journal_config {

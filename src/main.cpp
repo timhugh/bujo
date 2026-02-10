@@ -1,4 +1,5 @@
 #include "bujo/config.hpp"
+#include "bujo/date.hpp"
 #include "bujo/documents.hpp"
 #include "bujo/exec.hpp"
 #include "bujo/path.hpp"
@@ -23,7 +24,7 @@ bujo::config::journal_config load_config(argh::parser &cli) {
   return bujo::config::load_from_file(expanded_config_path);
 }
 
-std::optional<std::string> pop_arg(std::deque<std::string> args) {
+std::optional<std::string> pop_arg(std::deque<std::string> &args) {
   if (args.empty()) {
     return std::nullopt;
   }
@@ -108,6 +109,31 @@ void search_command(argh::parser &cli, std::deque<std::string> args) {
   output(selected_absolute.string());
 }
 
+void commit_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
+  if (!cfg.git.commit_message_template) {
+    throw std::runtime_error(
+        "Git commit message template is not set in config");
+  }
+  ::date::local_days now{::date::year_month_day{
+      ::date::floor<::date::days>(std::chrono::system_clock::now())}};
+  auto message = bujo::date::format(now, *cfg.git.commit_message_template);
+  bujo::exec::git_commit(cfg, message);
+  if (cfg.git.auto_push) {
+    bujo::exec::git_push(cfg);
+  }
+}
+
+void push_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
+  bujo::exec::git_push(cfg);
+}
+
+void configure_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
+  bujo::exec::editor(cfg, bujo::path::expand(bujo::config::default_file_path));
+}
+
 int main(int argc, char *argv[]) {
   try {
     argh::parser cli;
@@ -117,7 +143,7 @@ int main(int argc, char *argv[]) {
     cli.parse(argv);
 
     std::deque<std::string> args(cli.pos_args().begin(), cli.pos_args().end());
-    auto program_name = pop_arg(args);
+    pop_arg(args); // Remove the program name
 
     if (args.empty()) {
       log("No command provided");
@@ -133,6 +159,12 @@ int main(int argc, char *argv[]) {
       list_command(cli, std::move(args));
     } else if (command == "search") {
       search_command(cli, std::move(args));
+    } else if (command == "commit") {
+      commit_command(cli, std::move(args));
+    } else if (command == "push") {
+      push_command(cli, std::move(args));
+    } else if (command == "configure") {
+      configure_command(cli, std::move(args));
     } else {
       throw std::invalid_argument("Unknown command: " + *command);
     }

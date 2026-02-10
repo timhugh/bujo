@@ -25,8 +25,7 @@
 		}
 	],
 	"git": {
-		"auto_commit": true,
-		"commit_message_template": "update %D",
-		"min_commit_interval_seconds": 60
+		"auto_push": true,
+		"commit_message_template": "update %c"
 	}
 }
