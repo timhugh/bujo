@@ -40,3 +40,12 @@ TEST_F(PathTest, ExpandAllWithTildeInVariable) {
 
   EXPECT_EQ(expand("${BUJO_ENV_TEST_PATH}"), home / "bujo/test");
 }
+
+TEST(PathJoinTest, JoinsPathsAndOptionalPaths) {
+  std::filesystem::path base{"/home/me/journal"};
+  std::optional<std::filesystem::path> spreads{"spreads"};
+  std::filesystem::path file{"2026/02-04.md"};
+
+  EXPECT_EQ(join(base, spreads, file),
+            "/home/me/journal/spreads/2026/02-04.md");
+}

@@ -1,12 +1,14 @@
 #include "bujo/config.hpp"
-#include "bujo/date.hpp"
+#include "bujo/documents.hpp"
 #include "bujo/path.hpp"
-#include "bujo/span.hpp"
-#include "bujo/templates.hpp"
+#include "bujo/spreads.hpp"
+#include <_stdio.h>
 #include <argh.h>
 #include <date/date.h>
 #include <deque>
 #include <iostream>
+#include <optional>
+#include <stdexcept>
 
 void output(std::string_view msg) { std::cout << msg << std::endl; }
 
@@ -32,130 +34,106 @@ void spread_command(argh::parser &cli, std::deque<std::string> pos_args) {
     pos_args.pop_front(); // remove the reference filename from the arguments
   }
 
-  // select first spread config by default
-  std::string spread_config_key = cfg.spreads[0].key;
-  // check if a specific spread was invoked
+  std::optional<std::string> spread_config_key;
   for (const auto &spread : cfg.spreads) {
     if (cli[{spread.key}]) {
       spread_config_key = spread.key;
     }
   }
 
-  bujo::config::spread_config spread_config;
-  for (const auto &spread : cfg.spreads) {
-    if (spread.key == spread_config_key) {
-      spread_config = spread;
-      break;
-    }
-  }
-
-  std::filesystem::path base_spread_path =
-      bujo::path::expand(cfg.journal_root_dir);
-  if (cfg.spreads_dir) {
-    base_spread_path /= *cfg.spreads_dir;
-  }
-  if (spread_config.directory) {
-    base_spread_path /= *spread_config.directory;
-  }
-
-  if (reference_filename) {
-    reference_filename = bujo::path::expand(*reference_filename);
-    std::error_code ec;
-    reference_filename =
-        std::filesystem::relative(*reference_filename, base_spread_path, ec);
-    if (ec) {
-      log(std::format("Reference file {} is not in spread directory {}: {}",
-                      reference_filename.value().string(),
-                      base_spread_path.string(), ec.message()));
-      return;
-    }
-  }
-
-  date::local_days reference_date;
-  if (reference_filename) {
-    reference_date =
-        bujo::date::parse(spread_config.filename_template, *reference_filename);
-  } else {
-    reference_date = date::local_days{date::year_month_day{
-        date::floor<date::days>(std::chrono::system_clock::now())}};
-  }
-  auto reference_span = bujo::span::Span::from_template(
-      spread_config.filename_template, reference_date);
+  auto spread_config =
+      spread_config_key
+          ? bujo::config::spread_config_for_key(cfg, *spread_config_key)
+          : bujo::config::default_spread_config(cfg);
 
   if (sub_command == "current" || sub_command == "c") {
-    // reference_span is the current span
-  } else if (sub_command == "next" || sub_command == "n") {
-    reference_date = *reference_span.end() + date::days{1};
-    reference_span = bujo::span::Span::from_template(
-        spread_config.filename_template, reference_date);
-  } else if (sub_command == "previous" || sub_command == "prev" ||
-             sub_command == "p") {
-    reference_date = *reference_span.start() - date::days{1};
-    reference_span = bujo::span::Span::from_template(
-        spread_config.filename_template, reference_date);
-  } else {
-    throw std::invalid_argument("Unknown sub-command for spread: " +
-                                sub_command);
+    output(bujo::spreads::current_spread(cfg, spread_config).string());
+    return;
   }
 
-  std::filesystem::path spread_path = bujo::templates::render_filename_template(
-      spread_config.filename_template, reference_span);
+  if (sub_command == "next" || sub_command == "n") {
+    output(bujo::spreads::next_spread(cfg, spread_config, reference_filename)
+               .string());
+    return;
+  }
 
-  output((base_spread_path / spread_path).string());
+  if (sub_command == "previous" || sub_command == "prev" ||
+      sub_command == "p") {
+    output(
+        bujo::spreads::previous_spread(cfg, spread_config, reference_filename)
+            .string());
+    return;
+  }
+
+  throw std::invalid_argument("Unknown sub-command for spread: " + sub_command);
 }
 
 void note_command(argh::parser &cli, std::deque<std::string> pos_args) {
-  std::string config_path;
+  std::filesystem::path config_path;
   cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
-
-  auto cfg = bujo::config::load_from_file(bujo::path::expand(config_path));
+  auto expanded_config_path = bujo::path::expand(config_path);
+  auto cfg = bujo::config::load_from_file(expanded_config_path);
 
   log("Note command executed");
 }
 
 void list_command(argh::parser &cli, std::deque<std::string> pos_args) {
-  std::string config_path;
+  std::filesystem::path config_path;
   cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
+  auto expanded_config_path = bujo::path::expand(config_path);
+  auto cfg = bujo::config::load_from_file(expanded_config_path);
 
-  log("List command executed");
+  auto all_documents = bujo::documents::list_all(cfg);
+
+  for (const auto &doc : all_documents) {
+    output(doc.string());
+  }
 }
 
 void search_command(argh::parser &cli, std::deque<std::string> pos_args) {
-  std::string config_path;
+  std::filesystem::path config_path;
   cli({"-c", "--config"}, bujo::config::default_file_path) >> config_path;
+  auto expanded_config_path = bujo::path::expand(config_path);
+  auto cfg = bujo::config::load_from_file(expanded_config_path);
+
+  auto all_documents = bujo::documents::list_all(cfg);
 
   log("Search command executed");
 }
 
 int main(int argc, char *argv[]) {
-  argh::parser cli;
+  try {
+    argh::parser cli;
 
-  cli.add_params({"-c", "--config"});
+    cli.add_params({"-c", "--config"});
 
-  cli.parse(argv);
+    cli.parse(argv);
 
-  std::deque<std::string> pos_args(cli.pos_args().begin(),
-                                   cli.pos_args().end());
-  pos_args.pop_front(); // remove the program name
+    std::deque<std::string> pos_args(cli.pos_args().begin(),
+                                     cli.pos_args().end());
+    pos_args.pop_front(); // remove the program name
 
-  if (pos_args.empty()) {
-    log("No command provided");
-    return 1;
-  }
+    if (pos_args.empty()) {
+      log("No command provided");
+      return 1;
+    }
 
-  const std::string command = pos_args.front();
-  pos_args.pop_front(); // remove the command from the arguments
+    const std::string command = pos_args.front();
+    pos_args.pop_front(); // remove the command from the arguments
 
-  if (command == "spread") {
-    spread_command(cli, std::move(pos_args));
-  } else if (command == "note") {
-    note_command(cli, std::move(pos_args));
-  } else if (command == "list") {
-    list_command(cli, std::move(pos_args));
-  } else if (command == "search") {
-    search_command(cli, std::move(pos_args));
-  } else {
-    log("Unknown command: " + command);
+    if (command == "spread") {
+      spread_command(cli, std::move(pos_args));
+    } else if (command == "note") {
+      note_command(cli, std::move(pos_args));
+    } else if (command == "list") {
+      list_command(cli, std::move(pos_args));
+    } else if (command == "search") {
+      search_command(cli, std::move(pos_args));
+    } else {
+      throw std::invalid_argument("Unknown command: " + command);
+    }
+  } catch (const std::exception &e) {
+    log(std::string("Error: ") + e.what());
     return 1;
   }
 }

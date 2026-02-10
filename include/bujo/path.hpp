@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <optional>
 #include <regex>
 #include <string>
 
@@ -41,6 +42,32 @@ inline std::filesystem::path expand_env(const std::filesystem::path &path) {
 
 inline std::filesystem::path expand(const std::filesystem::path &path) {
   return expand_tilde(expand_env(path));
+}
+
+namespace {
+
+inline void append(std::filesystem::path &out, const std::filesystem::path &p) {
+  out /= p;
+}
+
+inline void append(std::filesystem::path &out,
+                   const std::optional<std::filesystem::path> &p) {
+  if (p) {
+    out /= *p;
+  }
+}
+
+} // namespace
+
+template <typename... S>
+inline std::filesystem::path join(const S &...paths)
+  requires((std::is_convertible_v<S, std::filesystem::path> ||
+            std::is_convertible_v<S, std::optional<std::filesystem::path>>) &&
+           ...)
+{
+  std::filesystem::path result;
+  (append(result, paths), ...);
+  return result;
 }
 
 } // namespace bujo::path
