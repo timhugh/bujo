@@ -31,6 +31,10 @@ target_link_libraries(bujo_lib INTERFACE
 add_executable(bujo src/main.cpp)
 target_link_libraries(bujo PRIVATE bujo_lib)
 
+install(TARGETS bujo
+	RUNTIME DESTINATION bin
+)
+
 if (BUILD_TESTING)
 	find_package(GTest CONFIG REQUIRED)
 

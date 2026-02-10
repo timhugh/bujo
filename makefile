@@ -1,6 +1,6 @@
 vcpkg_toolchain ?= "$$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 
-.PHONY: all configure build test clean
+.PHONY: all configure build test install clean
 
 all: build
 
@@ -15,6 +15,9 @@ build: build/CMakeCache.txt
 
 test: build
 	@ctest --test-dir build --output-on-failure $(TEST_ARGS)
+
+install: build
+	@cmake --install build
 
 clean:
 	@rm -rf build
