@@ -129,6 +129,11 @@ void push_command(argh::parser &cli, std::deque<std::string> args) {
   bujo::exec::git_push(cfg);
 }
 
+void pull_command(argh::parser &cli, std::deque<std::string> args) {
+  auto cfg = load_config(cli);
+  bujo::exec::git_pull(cfg);
+}
+
 void configure_command(argh::parser &cli, std::deque<std::string> args) {
   auto cfg = load_config(cli);
   bujo::exec::editor(cfg, bujo::path::expand(bujo::config::default_file_path));
@@ -163,6 +168,8 @@ int main(int argc, char *argv[]) {
       commit_command(cli, std::move(args));
     } else if (command == "push") {
       push_command(cli, std::move(args));
+    } else if (command == "pull") {
+      pull_command(cli, std::move(args));
     } else if (command == "configure") {
       configure_command(cli, std::move(args));
     } else {

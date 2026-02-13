@@ -94,4 +94,9 @@ inline void git_push(const config::journal_config &cfg) {
   system(fmt::format("cd {} && git push", base_path.string()).c_str());
 }
 
+inline void git_pull(const config::journal_config &cfg) {
+  auto base_path = config::journal_dir(cfg);
+  system(fmt::format("cd {} && git pull --rebase", base_path.string()).c_str());
+}
+
 } // namespace bujo::exec
