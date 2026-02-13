@@ -2,6 +2,7 @@
 
 #include "bujo/date.hpp"
 #include <date/date.h>
+#include <stdexcept>
 #include <string>
 
 namespace bujo::span {
@@ -16,7 +17,7 @@ class Day {
 public:
   Day(::date::local_days day) : day_(day) {}
 
-  std::string format(const std::string &f) const {
+  [[nodiscard]] std::string format(const std::string &f) const {
     return ::date::format(f, ::date::year_month_day{day_});
   }
 
@@ -104,8 +105,8 @@ public:
       Duration duration_;
     };
 
-    iterator begin() const { return iterator{start_, duration_}; }
-    iterator end() const { return iterator{end_, duration_}; }
+    [[nodiscard]] iterator begin() const { return iterator{start_, duration_}; }
+    [[nodiscard]] iterator end() const { return iterator{end_, duration_}; }
 
   private:
     ::date::local_days start_;
@@ -113,10 +114,12 @@ public:
     Duration duration_;
   };
 
-  Range<::date::days> days() const { return Range<::date::days>{start_, end_}; }
+  [[nodiscard]] Range<::date::days> days() const {
+    return Range<::date::days>{start_, end_};
+  }
 
-  Day start() const { return start_; }
-  Day end() const { return end_; }
+  [[nodiscard]] Day start() const { return start_; }
+  [[nodiscard]] Day end() const { return end_; }
 
 private:
   ::date::local_days start_;

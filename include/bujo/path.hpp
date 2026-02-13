@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <optional>
 #include <regex>
+#include <stdexcept>
 #include <string>
 
 namespace bujo::path {
@@ -30,7 +31,7 @@ inline std::filesystem::path expand_tilde(const std::filesystem::path &path) {
 
 inline std::filesystem::path expand_env(const std::filesystem::path &path) {
   std::string result(path);
-  static std::regex env("\\$\\{([^}]+)\\}");
+  static std::regex env(R"(\$\{([^}]+)\})");
   std::smatch match;
   while (std::regex_search(result, match, env)) {
     const char *s = std::getenv(match[1].str().c_str());

@@ -1,10 +1,14 @@
 #pragma once
 
 #include "bujo/path.hpp"
+#include <filesystem>
 #include <fmt/format.h>
 #include <fstream>
+#include <nlohmann/detail/macro_scope.hpp>
 #include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 

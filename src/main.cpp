@@ -5,13 +5,20 @@
 #include "bujo/path.hpp"
 #include "bujo/spreads.hpp"
 #include <argh.h>
+#include <chrono>
+#include <cmath>
 #include <date/date.h>
 #include <deque>
+#include <exception>
+#include <filesystem>
 #include <fmt/format.h>
 #include <iostream>
 #include <optional>
 #include <stdexcept>
-#include <stdio.h>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
 
 void output(std::string_view msg) { std::cout << msg << std::endl; }
 

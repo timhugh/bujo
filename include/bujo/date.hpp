@@ -1,10 +1,15 @@
 #pragma once
 
+#include <algorithm>
+#include <cstddef>
 #include <date/date.h>
 #include <fmt/format.h>
+#include <optional>
 #include <regex>
 #include <stdexcept>
 #include <string>
+#include <string_view>
+#include <vector>
 
 namespace bujo::date {
 

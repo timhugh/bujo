@@ -1,11 +1,17 @@
 #pragma once
 
 #include "bujo/config.hpp"
+#include "bujo/date.hpp"
+#include "bujo/path.hpp"
 #include "bujo/span.hpp"
 #include "bujo/templates.hpp"
+#include <chrono>
 #include <date/date.h>
 #include <filesystem>
+#include <format>
+#include <optional>
 #include <stdexcept>
+#include <system_error>
 
 namespace bujo::spreads {
 

@@ -8,7 +8,9 @@
 #include <inja/environment.hpp>
 #include <inja/function_storage.hpp>
 #include <inja/inja.hpp>
+#include <inja/json.hpp>
 #include <string>
+#include <vector>
 
 namespace bujo::templates {
 

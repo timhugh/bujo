@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <gtest/gtest.h>
 
 #include "bujo/config.hpp"
@@ -32,7 +33,7 @@ TEST(ConfigTest, LoadFromFile) {
   EXPECT_EQ("monthly_spread_template.md", c.spreads[1].default_template);
 
   EXPECT_TRUE(c.git.auto_push);
-  EXPECT_EQ("update %D", c.git.commit_message_template);
+  EXPECT_EQ("update %c", c.git.commit_message_template);
 }
 
 TEST(ConfigTest, LoadMissingFile) {
