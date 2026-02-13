@@ -1,0 +1,38 @@
+CompileFlags:
+  Add: [-std=c++23]
+  CompilationDatabase: build/
+
+Index:
+  Background: Build
+  StandardLibrary: true
+
+Style:
+  QuotedHeaders:
+    - "bujo/.*"
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+  ClangTidy:
+    Add:
+      - clang-diagnostic-*
+      - clang-analyzer-*
+      - bugprone-*
+      - modernize-*
+    Remove:
+      - modernize-use-trailing-return-type
+      - bugprone-chained-comparison
+    CheckOptions:
+      readability-identifier-naming.VariableCase: lower_case
+      readability-identifier-naming.ClassCase: CamelCase
+      readability-identifier-naming.StructCase: CamelCase
+      readability-identifier-naming.NamespaceCase: lower_case
+      readability-identifier-naming.FunctionCase: lower_case
+      readability-identifier-naming.ParameterCase: lower_case
+      readability-identifier-naming.MemberCase: lower_case
+
+Completion:
+  AllScopes: Yes
+  ArgumentLists: FullPlaceholders
+  HeaderInsertion: IWYU
+  CodePatterns: All
