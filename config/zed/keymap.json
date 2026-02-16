@@ -8,8 +8,7 @@
 			", n F": ["task::Spawn", { "task_name": "Bujo forward" }],
 			", n b": ["task::Spawn", { "task_name": "Bujo previous" }],
 			", n B": ["task::Spawn", { "task_name": "Bujo backward" }],
-			", n C": ["task::Spawn", { "task_name": "Bujo commit" }],
-			", n P": ["task::Spawn", { "task_name": "Bujo push" }],
+			", n S": ["task::Spawn", { "task_name": "Bujo sync" }],
 		},
 	},
 ]
