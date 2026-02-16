@@ -32,7 +32,6 @@ TEST(ConfigTest, LoadFromFile) {
   EXPECT_EQ("%Y-%m.md", c.spreads[1].filename_template);
   EXPECT_EQ("monthly_spread_template.md", c.spreads[1].default_template);
 
-  EXPECT_TRUE(c.git.auto_push);
   EXPECT_EQ("update %c", c.git.commit_message_template);
 }
 

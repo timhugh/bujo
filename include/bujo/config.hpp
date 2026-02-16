@@ -55,10 +55,9 @@ struct spread_config {
 };
 
 struct git_config {
-  bool auto_push;
   std::optional<std::string> commit_message_template;
 
-  NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(git_config, auto_push,
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(git_config,
                                               commit_message_template);
 };
 

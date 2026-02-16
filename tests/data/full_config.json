@@ -25,7 +25,6 @@
 		}
 	],
 	"git": {
-		"auto_push": true,
 		"commit_message_template": "update %c"
 	}
 }

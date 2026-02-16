@@ -116,7 +116,7 @@ void search_command(argh::parser &cli, std::deque<std::string> args) {
   output(selected_absolute.string());
 }
 
-void commit_command(argh::parser &cli, std::deque<std::string> args) {
+void sync_command(argh::parser &cli, std::deque<std::string> args) {
   auto cfg = load_config(cli);
   if (!cfg.git.commit_message_template) {
     throw std::runtime_error(
@@ -126,19 +126,8 @@ void commit_command(argh::parser &cli, std::deque<std::string> args) {
       ::date::floor<::date::days>(std::chrono::system_clock::now())}};
   auto message = bujo::date::format(now, *cfg.git.commit_message_template);
   bujo::exec::git_commit(cfg, message);
-  if (cfg.git.auto_push) {
-    bujo::exec::git_push(cfg);
-  }
-}
-
-void push_command(argh::parser &cli, std::deque<std::string> args) {
-  auto cfg = load_config(cli);
-  bujo::exec::git_push(cfg);
-}
-
-void pull_command(argh::parser &cli, std::deque<std::string> args) {
-  auto cfg = load_config(cli);
   bujo::exec::git_pull(cfg);
+  bujo::exec::git_push(cfg);
 }
 
 void configure_command(argh::parser &cli, std::deque<std::string> args) {
@@ -171,12 +160,8 @@ int main(int argc, char *argv[]) {
       list_command(cli, std::move(args));
     } else if (command == "search") {
       search_command(cli, std::move(args));
-    } else if (command == "commit") {
-      commit_command(cli, std::move(args));
-    } else if (command == "push") {
-      push_command(cli, std::move(args));
-    } else if (command == "pull") {
-      pull_command(cli, std::move(args));
+    } else if (command == "sync") {
+      sync_command(cli, std::move(args));
     } else if (command == "configure") {
       configure_command(cli, std::move(args));
     } else {
