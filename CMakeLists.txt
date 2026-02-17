@@ -14,12 +14,14 @@ find_package(fmt CONFIG REQUIRED)
 find_package(inja CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
-add_library(bujo_lib INTERFACE)
-target_include_directories(bujo_lib INTERFACE
+add_library(bujo_lib
+	src/config.cpp
+)
+target_include_directories(bujo_lib PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>
 )
-target_link_libraries(bujo_lib INTERFACE
+target_link_libraries(bujo_lib PUBLIC
 	argh
 	date::date
 	date::date-tz
