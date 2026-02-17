@@ -1,4 +1,5 @@
 #include "bujo/span.hpp"
+
 #include <date/date.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

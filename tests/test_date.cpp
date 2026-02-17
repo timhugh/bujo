@@ -1,8 +1,8 @@
+#include "bujo/date.hpp"
+
 #include <date/date.h>
 #include <gtest/gtest.h>
 #include <stdexcept>
-
-#include "bujo/date.hpp"
 
 using namespace ::bujo::date;
 using namespace ::date;

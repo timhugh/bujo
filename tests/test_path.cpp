@@ -1,8 +1,8 @@
+#include "bujo/path.hpp"
+
 #include <cstdlib>
 #include <filesystem>
 #include <gtest/gtest.h>
-
-#include "bujo/path.hpp"
 
 using namespace ::testing;
 using namespace ::bujo::path;

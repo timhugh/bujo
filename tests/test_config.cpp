@@ -1,7 +1,7 @@
+#include "bujo/config.hpp"
+
 #include <filesystem>
 #include <gtest/gtest.h>
-
-#include "bujo/config.hpp"
 
 using namespace bujo;
 
