@@ -18,6 +18,7 @@ add_library(bujo_lib
 	src/config.cpp
 	src/date.cpp
 	src/documents.cpp
+	src/exec.cpp
 )
 target_include_directories(bujo_lib PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
