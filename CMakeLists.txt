@@ -20,6 +20,7 @@ add_library(bujo_lib
 	src/documents.cpp
 	src/exec.cpp
 	src/path.cpp
+	src/span.cpp
 )
 target_include_directories(bujo_lib PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
