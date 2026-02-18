@@ -14,18 +14,24 @@
 
 namespace bujo::templates {
 
+inja::json to_json(const span::Day &day) {
+  return {
+      {"year", day.format("%Y")},    //
+      {"month", day.format("%m")},   //
+      {"day", day.format("%d")},     //
+      {"weekday", day.format("%A")}, //
+      {"iso", day.format("%F")}      //
+  };
+}
+
 inja::json to_json(const span::Span &span) {
   std::vector<inja::json> days;
   for (auto day : span.days()) {
-    days.push_back({
-        {"year", day.format("%Y")},    //
-        {"month", day.format("%m")},   //
-        {"day", day.format("%d")},     //
-        {"weekday", day.format("%A")}, //
-        {"iso", day.format("%F")}      //
-    });
+    days.push_back(to_json(day));
   }
-  return {{"days", days}};
+  return {{"start", to_json(span.start())},
+          {"end", to_json(span.end())},
+          {"days", days}};
 }
 
 std::string render_filename_template(const std::string &tmpl,
