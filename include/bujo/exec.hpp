@@ -5,8 +5,6 @@
 #include <filesystem>
 #include <fmt/format.h>
 #include <string>
-#include <sys/_types/_pid_t.h>
-#include <sys/_types/_ssize_t.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
